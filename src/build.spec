@@ -3,7 +3,7 @@
 BLOCK_CIPHER = None
 APP_NAME = 'Pythub'
 APP_APP = 'Pythub.app'
-APP_VERSION = '0.0.1'
+APP_VERSION = '0.0.2'
 SCRIPTS = ['pythub.py']
 BINARIES = []
 DATAS = []
@@ -13,7 +13,7 @@ EXCLUDES = []  # 不需要打包的模块
 RUNTIME_HOOKS = []
 BUNDLE_IDENTIFIER = 'com.crogram.pythub'  # 一般情况下Bundle ID的格式为：com.公司名称.项目名称
 UPX = True # 如果有UPX安装(执行Configure.py时检测),会压缩执行文件(Windows系统中的DLL也会)
-PATHEX = ['aa.py', 'bb.py', 'cc.py', '/Users/douzhenjiang/Projects/pythub/src']
+PATHEX = ['/Users/douzhenjiang/Projects/pythub/src']
 
 a = Analysis(
     SCRIPTS,
