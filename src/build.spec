@@ -3,7 +3,7 @@
 BLOCK_CIPHER = None
 APP_NAME = 'Pythub'
 APP_APP = 'Pythub.app'
-APP_VERSION = '0.0.2'
+APP_VERSION = '0.0.3'
 SCRIPTS = ['pythub.py']
 BINARIES = []
 DATAS = []

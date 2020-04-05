@@ -3,16 +3,14 @@
 import os.path
 from tkinter import (Button, Checkbutton, Entry, IntVar, Label, LabelFrame, StringVar, filedialog)
 
-from utils import set_window_center
-
 
 class View(object):
     def __init__(self, master=None):
         self.root = master
         self.status_build = False
-        self.init_frame()
+        self.init_view()
 
-    def init_frame(self):
+    def init_view(self):
         '''基本框架'''
         self.frm_project = LabelFrame(self.root, text='项目')
         self.frm_config = LabelFrame(self.root, text='配置')
@@ -65,11 +63,11 @@ class View(object):
 
     def init_config(self):
         '''配置选项'''
-        # 定义变量
-        self.cfg_onefile = IntVar()
-        self.cfg_onedir = IntVar()
-        self.cfg_noconsole = IntVar()
-        self.cfg_clean = IntVar()
+        # 定义变量，并初始化
+        self.cfg_onefile = IntVar(value=1)
+        self.cfg_onedir = IntVar(value=0)
+        self.cfg_noconsole = IntVar(value=1)
+        self.cfg_clean = IntVar(value=1)
         self.cfg_rename = IntVar()
         self.cfg_exe_name = StringVar()
         # 子配置框架
@@ -88,13 +86,14 @@ class View(object):
         self.btn_clean = Checkbutton(
             self.frm_config_base, text='构建前清理', variable=self.cfg_clean)
         self.btn_isonefile = Checkbutton(
-            self.frm_config_exe, text='单个执行文件', variable=self.cfg_onefile)
+            self.frm_config_exe, text='独立执行文件', variable=self.cfg_onefile)
         self.btn_isonedir = Checkbutton(
-            self.frm_config_exe, text='文件夹包', variable=self.cfg_onedir)
+            self.frm_config_exe, text='文件夹包含', variable=self.cfg_onedir)
         self.btn_rename = Checkbutton(
             self.frm_config_other, text='修改执行文件名', variable=self.cfg_rename)
         self.entry_rename = Entry(
             self.frm_config_other, textvariable=self.cfg_exe_name)
+
         # 放置按钮
         self.btn_isonefile.pack(side='left', fill='x')
         self.btn_isonedir.pack(side='left', fill='x')
@@ -102,11 +101,20 @@ class View(object):
         self.btn_clean.pack(side='left', fill='x')
         self.btn_rename.pack(side='left', fill='x')
         self.entry_rename.pack(fill='x')
-        # 初始化默认值
-        self.cfg_onefile.set(1)
-        self.cfg_onedir.set(0)
-        self.cfg_noconsole.set(1)
-        self.cfg_clean.set(1)
+
+        # 变量自动切换操作
+        self.cfg_onefile.trace('w', self.cfg_onefile_trace)
+        self.cfg_onedir.trace('w', self.cfg_onedir_trace)
+
+    def cfg_onefile_trace(self, *args):
+        '''cfg_onefile 与 cfg_onedir 可以同时不选，但不能同时选中，选中独立执行文件时不能选中文件夹包'''
+        if self.cfg_onefile.get() == 1:
+            self.cfg_onedir.set(0)
+
+    def cfg_onedir_trace(self, *args):
+        '''cfg_onefile 与 cfg_onedir 可以同时不选，但不能同时选中，选中文件夹包含时不能选中独立执行文件'''
+        if self.cfg_onedir.get() == 1:
+            self.cfg_onefile.set(0)
 
     def init_operate(self):
         '''操作命令'''
@@ -224,3 +232,9 @@ class View(object):
             cmds.append(self.entry_value_list[0].get())
 
         return ' '.join(cmds)
+
+if __name__ == '__main__':
+    from tkinter import Tk
+    root = Tk()
+    View(root)
+    root.mainloop()
